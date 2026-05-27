@@ -1,9 +1,9 @@
 name: CI 111000273
 
 'on':
-    push:
-        branches:
-            - "**"
+  push:
+    branches:
+      - '**'
 
 # Required so the Marketplace action can write the visual test report to the UI
 permissions:
@@ -13,38 +13,38 @@ permissions:
   pull-requests: write
 
 env:
-  LOCAL_ACT: "false"
+  LOCAL_ACT: 'false'
 
 jobs:
-    ci:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4  # Fixed version
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Fixed version
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4 # Fixed version
-              with:
-                  node-version: "22"
-                  cache: npm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4 # Fixed version
+        with:
+          node-version: '22'
+          cache: npm
 
-            - name: Install dependencies
-              run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-            - name: TypeScript typecheck
-              run: npm run typecheck
+      - name: TypeScript typecheck
+        run: npm run typecheck
 
-            - name: Prettier check
-              run: npm run format:check
+      - name: Prettier check
+        run: npm run format:check
 
-            - name: Run tests
-              run: |
-                  mkdir -p reports
-                  npm test -- --reporter=default --reporter=junit --outputFile.junit=reports/vitest-junit.xml
+      - name: Run testsz
+        run: |
+          mkdir -p reports
+          npm test -- --reporter=default --reporter=junit --outputFile.junit=reports/vitest-junit.xml
 
-            # Fulfills the 20% "Display test results on UI" requirement
-            - name: Publish Test Report UI
-              uses: EnricoMi/publish-unit-test-result-action@v2
-              if: ${{ always() && (env.LOCAL_ACT != 'true') }}
-              with:
-                  files: reports/vitest-junit.xml
+      # Fulfills the 20% "Display test results on UI" requirement
+      - name: Publish Test Report UI
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: ${{ always() && (env.LOCAL_ACT != 'true') }}
+        with:
+          files: reports/vitest-junit.xml
