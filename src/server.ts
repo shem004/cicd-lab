@@ -14,4 +14,4 @@ async function start() {
   }
 }
 
-void start();
+void start().  ;
